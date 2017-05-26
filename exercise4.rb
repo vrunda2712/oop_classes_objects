@@ -7,24 +7,32 @@ class Paperboy
     @name = name
     @experience = 0
     @earnings = 0
-    @quota = 0
   end
 
   def quota
-    @quota = 50 + (@experience * 0.5)
+    @quota = @experience / 2 + 50
   end
 
   def deliver(start_address, end_address)
-    @earnings += (end_address - start_address) * 0.25
-    @experience += (end_address - start_address)
+    total_houses = (end_address - start_address) + 1
+    total_pay = pay (total_houses)
 
-    if (end_address - start_address) < quota
-      @earnings -= 2.00
+    @earnings += total_pay
+    @experience += total_houses
+
+    total_pay
+  end
+
+  def pay(total_houses)
+    total_pay = total_houses * 0.25
+
+    if total_houses < quota
+      total_pay -= 2.00
+    elsif total_houses > quota
+      total_pay += 0.25 * (total_houses - quota)
     end
 
-    if (end_address - start_address) > quota
-      @earnings += ((end_address - start_address) - quota) * 0.5
-    end
+    total_pay
   end
 
   def report
